@@ -72,7 +72,7 @@ def createJob(sentences):
     response = requests.post(
     "https://api.hume.ai/v0/batch/jobs",
     headers={
-        "X-Hume-Api-Key": "d43oGgPUD0mnoAgEmByIEDHQ5ubCx1388sFPFqAlPl4yGoVT",
+        "X-Hume-Api-Key": "Ru1fxw3ytHUeqqyWswzAFAiSGtEbVuZUZxuBDGOw4q5GFI8U",
         "Content-Type": "application/json"
     },
     json={
@@ -96,7 +96,7 @@ def jobStatusCheck(job_id):
     response = requests.get(
     f"https://api.hume.ai/v0/batch/jobs/{job_id}",
     headers={
-        "X-Hume-Api-Key": "d43oGgPUD0mnoAgEmByIEDHQ5ubCx1388sFPFqAlPl4yGoVT"
+        "X-Hume-Api-Key": "Ru1fxw3ytHUeqqyWswzAFAiSGtEbVuZUZxuBDGOw4q5GFI8U"
     },
     )
     data = response.json()
@@ -108,7 +108,7 @@ def getHighests(job_id):
     response = requests.get(
     f"https://api.hume.ai/v0/batch/jobs/{job_id}/predictions",
     headers={
-        "X-Hume-Api-Key": "d43oGgPUD0mnoAgEmByIEDHQ5ubCx1388sFPFqAlPl4yGoVT"
+        "X-Hume-Api-Key": "Ru1fxw3ytHUeqqyWswzAFAiSGtEbVuZUZxuBDGOw4q5GFI8U"
     },
     )
     emotions = response.json()[0]['results']['predictions'][0]['models']['language']['grouped_predictions'][0]['predictions'][0]['emotions']
@@ -134,3 +134,5 @@ def generalStockPredictions():
     print("\n----------->predictions done....")
 
     ttdb.truncate_and_populate_table(predictions)
+
+#generalStockPredictions()

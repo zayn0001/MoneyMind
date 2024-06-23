@@ -253,38 +253,20 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(securit
         raise HTTPException(status_code=401, detail="Invalid token")
 
 
-
-
-
-
-
-@app.get("/backend/python")
-def hello_world(request: Request, current_user: dict = Depends(get_current_user)):
-    print(current_user)
-    mystr = f"Hello, {current_user['name']}. This is a random sentence"
-    return {"message":mystr}
-
-
 @app.get("/backend/getcompany")
 async def hello(request: Request, current_user: dict = Depends(get_current_user)):
     company_names = get_company_names(current_user['email'])
     comdict = []
     for com in company_names:
         comdict.append({"name":com})
-    return comdict
+    return {"message":comdict}
 
 @app.get("/backend/getportfolio")
 def hello(request: Request, current_user: dict = Depends(get_current_user)):
     company_names = get_company_names(current_user['email'])
-    print("comapnieessssssssss")
-    print(company_names)
     newslinks = yc.get_news_links(company_names)
-    print("newsssslinkssssssssssssss")
-    print(newslinks)
     portfolio = yc.portfolioStockPredictions(newslinks)
-    print("portfolioooooooooooooooo")
-    print(portfolio)
-    return {"message":portfolio}
+    return {"message":portfolio, 'Cross-Origin-Opener-Policy':'same-origin'}
 
 class UserRequest(BaseModel):
     company: str

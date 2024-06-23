@@ -20,7 +20,7 @@ export default function Portfolio() {
   const [company, setCompany] = useState("")
   const [loading, setLoading] = useState(true);
   const [portfolio, setPortfolio] = useState([])
-  const [advices, setAdvices] = useState([{name:"microsoft", sentiment:1.57}, {name:"apple", sentiment:0.123}])
+  const [advices, setAdvices] = useState([{'name': 'apple', 'advice': "Given the positive sentiment towards Apple's stock and the opportunity for employees to become shareholders through discretionary stock programs and purchase plans, investing in Apple stock could be a beneficial decision as it aligns with strong employee confidence in the company's future performance."}, {'name': 'microsoft', 'advice': 'Given the negative sentiment towards Microsoft stock due to recent changes in ETF weightings and a reported feud with Nvidia, it might be prudent to consider alternative investment options that offer similar technology exposure without the potential volatility linked to these disputes and allocation rules. Investors may find the Vanguard Information Technology ETF to be a more stable option, given its strong historical performance and lack of frequent rebalancing quirks.'}, {'name': 'openai', 'advice': "Considering the historical significance of OpenAI's cofounder Ilya Sutskever's pioneering work in deep learning, as well as Nvidia CEO Jensen Huang's recognition of his contributions to the AI boom, investing in OpenAI stock appears promising due to its strong foundations and continued advancements in the AI sector. This positive sentiment is bolstered by the synergy with Nvidia's cutting-edge GPU technology, which has been instrumental in significant AI accomplishments."}])
 
   const handleaddcompany = async () => {
     try {
@@ -62,7 +62,7 @@ export default function Portfolio() {
   
       const responseData = await response.json();
       console.log(responseData)
-      setPortfolio(responseData);
+      setPortfolio(responseData.message);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -82,7 +82,6 @@ export default function Portfolio() {
       }
   
       const responseData = await response.json();
-      console.log(responseData, "908098098")
       setAdvices(responseData.message);
     } catch (error) {
       console.error("Error fetching data:", error);
