@@ -45,7 +45,7 @@ export default function PortfolioTable({ invoices, fetchportfolio, user }) {
       </TableHeader>
       <TableBody>
         {invoices.map((invoice) => (
-          <TableRow key={invoice.invoice}>
+          <TableRow key={invoice.name}>
             <TableCell className="font-medium text-center">{invoice.name}</TableCell>
             <TableCell className="font-medium text-center"><Button 
         variant="outline" 

@@ -1,8 +1,11 @@
 import json
 import boto3
-from os import getenv
+from os import getenv, path
 from dotenv import load_dotenv
-load_dotenv()
+app_base = path.dirname(__file__)
+app_root = path.join(app_base, '../')
+
+load_dotenv(dotenv_path=path.join(app_root, '.env.local'))
 
 import requests
 
@@ -17,7 +20,7 @@ def get_news_links(company_names):
             params=params,
             headers=headers,
         ).json()
-        news = [{"title":x["title"], "description":x["description"], "url":x["url"]} for x in response["news"]["results"]]
+        news = [x["url"] for x in response["news"]["results"]]
         data[company] = news
     return data
 results = get_news_links(["microsoft", "apple", "google"])

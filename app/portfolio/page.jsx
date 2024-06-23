@@ -109,7 +109,9 @@ export default function Portfolio() {
 
   if (!user || loading) {
     return (<>
+    <div style={{justifyContent:"center", display:"flex", alignItems:"center", alignContent:"center", height:"100vh", flexDirection:"column"}}>
     <CircularProgress color="secondary" size={"3em"} />
+    </div>
     </>
     ); 
   }
@@ -117,7 +119,7 @@ export default function Portfolio() {
     return (
       
     <>
-      <NavBar/>
+      <NavBar user={user}/>
       <div className='flex flex-row m-auto'>
         <div style={{width:"50%", height:"80vh", margin:"auto"}}>
           <div style={{justifyContent:"center", display:"flex", alignItems:"center", alignContent:"center", height:"50%", width:"100%", flexDirection:"column"}}>
@@ -136,7 +138,7 @@ export default function Portfolio() {
         </div>
       <div className='border border-white rounded m-10' style={{justifyContent:"flex-start", display:"flex", alignItems:"end", height:"80vh", width:"50%", flexDirection:"column"} }>
         {sentiments.map((comp)=>(
-          <Info company={comp.name} sentiment={comp.sentiment}></Info>
+          <Info key={comp.name} company={comp.name} sentiment={comp.sentiment}></Info>
         ))}
       </div>
       </div>

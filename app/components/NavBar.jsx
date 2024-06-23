@@ -12,7 +12,7 @@ import {
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu"
 import Image from "next/image"
 
-export default function NavBar() {
+export default function NavBar({user}) {
   return (
     <nav className="max-w-7xl flex mx-auto px-2 sm:px-6 lg:px-8 flex justify-between">
       <div className="relative flex flex-row items-center justify-between h-16">
@@ -40,9 +40,9 @@ export default function NavBar() {
         <NavigationMenuList>
           <NavigationMenuItem>
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-            <span className="mr-10">John Doe</span>
+            <span className="mr-10">{user["displayName"]}</span>
             <Image
-                src="https://t3.ftcdn.net/jpg/02/18/23/02/360_F_218230230_OdCO2XyeMsH3ica7Um99uIeMnTFGyibC.jpg"
+                src={user["photoURL"]}
                 alt="Profile Image"
                 width={40}
                 height={40}

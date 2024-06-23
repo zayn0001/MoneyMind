@@ -8,14 +8,14 @@ import SignOutButton from "../components/SignOutButton";
 import LargeText from "../components/LargeText"
 import SmallText from "../components/SmallText"
 import NavBar from "../components/NavBar"
-
+import Info from '../components/Info';
 
 export default function Portfolio() {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const [sentiments, setSentiments] = useState([{name:"microsoft", sentiment:1.57}, {name:"apple", sentiment:0.123}])
 
   const fetchBackendData = async (accessToken) => {
     try {
@@ -58,7 +58,9 @@ export default function Portfolio() {
 
   if (!user || loading) {
     return (<>
+    <div style={{justifyContent:"center", display:"flex", alignItems:"center", alignContent:"center", height:"100vh", flexDirection:"column"}}>
     <CircularProgress color="secondary" size={"3em"} />
+    </div>
     </>
     ); 
   }
@@ -66,8 +68,12 @@ export default function Portfolio() {
     return (
       
     <>
-      <NavBar/>
-    
+      <NavBar user={user}/>
+      <div className='border border-white rounded m-auto mt-10' style={{justifyContent:"flex-start", display:"flex", alignItems:"end", height:"80vh", width:"90%", flexDirection:"column"} }>
+        {sentiments.map((comp)=>(
+          <Info key={comp.name} company={comp.name} sentiment={comp.sentiment}></Info>
+        ))}
+      </div>
     </>
   )
   

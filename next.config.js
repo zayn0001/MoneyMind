@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['t3.ftcdn.net'], // Add your external domain here
+    domains: ['lh3.googleusercontent.com'], // Add your external domain here
   },
   rewrites: async () => {
     return [
