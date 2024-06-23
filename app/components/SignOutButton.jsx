@@ -17,7 +17,7 @@ const SignOutButton = () => {
     <Button 
       variant="outline" 
       onClick={handleSignOut} 
-      style={{ backgroundColor: "white", color: "black" }}
+      style={{ backgroundColor: "white", color: "black", margin:20 }}
     >
       Sign Out
     </Button>

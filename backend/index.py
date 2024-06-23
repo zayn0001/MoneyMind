@@ -8,6 +8,7 @@ import boto3
 from os import getenv, path
 from dotenv import load_dotenv
 from pydantic import BaseModel
+import backend.youcom as yc
 app_base = path.dirname(__file__)
 app_root = path.join(app_base, '../')
 
@@ -67,6 +68,38 @@ def update_user(username, company_names):
         )
         
         print(f"New user '{username}' created with company names.")
+
+def truncate_and_populate_table(data):
+    table_name = 'money-mind-general'
+
+    # Scan the table to get all items (used for deletion)
+    response = dynamodb.scan(
+        TableName=table_name,
+        ProjectionExpression='name'
+    )
+
+    items = response.get('Items', [])
+    
+    # Delete each item
+    for item in items:
+        dynamodb.delete_item(
+            TableName=table_name,
+            Key={
+                'name': item['name']
+            }
+        )
+
+    # Add each new object to the table
+    for obj in data:
+        dynamodb.put_item(
+            TableName=table_name,
+            Item={
+                'name': {'S': obj['name']},
+                'advice': {'S': obj['advice']}
+            }
+        )
+
+    print("Table truncated and populated successfully.")
 
 
 def get_company_names(username):
@@ -172,6 +205,31 @@ def remove_company(username, company_name):
         # User does not exist
         print(f"User '{username}' does not exist.")
 
+def get_all_data():
+    table_name = 'money-mind-general'
+    scan_kwargs = {}
+    items = []
+
+    # Scan the table to get all items
+    done = False
+    start_key = None
+
+    while not done:
+        if start_key:
+            scan_kwargs['ExclusiveStartKey'] = start_key
+
+        response = dynamodb.scan(TableName=table_name, **scan_kwargs)
+        items.extend(response.get('Items', []))
+        start_key = response.get('LastEvaluatedKey', None)
+        done = start_key is None
+
+    # Convert DynamoDB attribute values to strings
+    for item in items:
+        for key, value in item.items():
+            item[key] = value.get('S') if 'S' in value else str(value)
+
+    return items
+
 
 app = FastAPI()
 
@@ -207,22 +265,33 @@ def hello_world(request: Request, current_user: dict = Depends(get_current_user)
     return {"message":mystr}
 
 
-@app.get("/backend/getportfolio")
-def hello(request: Request, current_user: dict = Depends(get_current_user)):
+@app.get("/backend/getcompany")
+async def hello(request: Request, current_user: dict = Depends(get_current_user)):
     company_names = get_company_names(current_user['email'])
-    print(company_names)
-    print("fsdfsdfsdf")
     comdict = []
     for com in company_names:
         comdict.append({"name":com})
     return comdict
+
+@app.get("/backend/getportfolio")
+def hello(request: Request, current_user: dict = Depends(get_current_user)):
+    company_names = get_company_names(current_user['email'])
+    print("comapnieessssssssss")
+    print(company_names)
+    newslinks = yc.get_news_links(company_names)
+    print("newsssslinkssssssssssssss")
+    print(newslinks)
+    portfolio = yc.portfolioStockPredictions(newslinks)
+    print("portfolioooooooooooooooo")
+    print(portfolio)
+    return {"message":portfolio}
 
 class UserRequest(BaseModel):
     company: str
     
     
 @app.post("/backend/addcompany")
-async def add(user_request: UserRequest, current_user: dict = Depends(get_current_user)):
+def add(user_request: UserRequest, current_user: dict = Depends(get_current_user)):
     add_company(current_user["email"], user_request.company)
     return {"message":"done"}
 
@@ -231,3 +300,9 @@ async def add(user_request: UserRequest, current_user: dict = Depends(get_curren
 async def add(user_request: UserRequest, current_user: dict = Depends(get_current_user)):
     remove_company(current_user["email"], user_request.company)
     return {"message":"done"}
+
+@app.get("/backend/getgeneral")
+def add(current_user: dict = Depends(get_current_user)):
+    data = get_all_data()
+    print(data)
+    return {"message":data, 'Cross-Origin-Opener-Policy':'same-origin'}

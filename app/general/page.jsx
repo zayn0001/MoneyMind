@@ -15,11 +15,11 @@ export default function Portfolio() {
   const [user, setUser] = useState(null);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [sentiments, setSentiments] = useState([{name:"microsoft", sentiment:1.57}, {name:"apple", sentiment:0.123}])
+  const [general, setGeneral] = useState([{name:"microsoft", sentiment:1.57}, {name:"apple", sentiment:0.123}])
 
   const fetchBackendData = async (accessToken) => {
     try {
-      const response = await fetch("/backend/python", {
+      const response = await fetch("/backend/getgeneral", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -32,7 +32,7 @@ export default function Portfolio() {
   
       const responseData = await response.json();
       console.log(responseData)
-      setData(responseData.message);
+      setGeneral(responseData.message);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -69,9 +69,9 @@ export default function Portfolio() {
       
     <>
       <NavBar user={user}/>
-      <div className='border border-white rounded m-auto mt-10' style={{justifyContent:"flex-start", display:"flex", alignItems:"end", height:"80vh", width:"90%", flexDirection:"column"} }>
-        {sentiments.map((comp)=>(
-          <Info key={comp.name} company={comp.name} sentiment={comp.sentiment}></Info>
+      <div className='border border-white rounded m-auto mt-10 overflow-y-scroll' style={{justifyContent:"flex-start", display:"flex", alignItems:"end", height:"80vh", width:"90%", flexDirection:"column"} }>
+        {general.map((comp)=>(
+          <Info key={comp.ticker} company={comp.ticker} sentiment={comp.advice}></Info>
         ))}
       </div>
     </>

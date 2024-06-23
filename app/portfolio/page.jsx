@@ -19,30 +19,8 @@ export default function Portfolio() {
   const [data, setData] = useState(null);
   const [company, setCompany] = useState("")
   const [loading, setLoading] = useState(true);
-  const [portflio, setPortfolio] = useState([])
-  const [sentiments, setSentiments] = useState([{name:"microsoft", sentiment:1.57}, {name:"apple", sentiment:0.123}])
-  const fetchBackendData = async (accessToken) => {
-    try {
-      const response = await fetch("/backend/python", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-  
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-  
-      const responseData = await response.json();
-      console.log(responseData)
-      setData(responseData.message);
-      setLoading(false);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      setLoading(false);
-    }
-  };
+  const [portfolio, setPortfolio] = useState([])
+  const [advices, setAdvices] = useState([{name:"microsoft", sentiment:1.57}, {name:"apple", sentiment:0.123}])
 
   const handleaddcompany = async () => {
     try {
@@ -71,7 +49,7 @@ export default function Portfolio() {
 
   const fetchportfolio = async (accessToken) => {
     try {
-      const response = await fetch("/backend/getportfolio", {
+      const response = await fetch("/backend/getcompany", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -90,15 +68,37 @@ export default function Portfolio() {
     }
   };
 
-  useEffect(() => {
+  const fetchadvices = async (accessToken) => {
+    try {
+      const response = await fetch("/backend/getportfolio", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+  
+      const responseData = await response.json();
+      console.log(responseData, "908098098")
+      setAdvices(responseData.message);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect( () => {
     const auth = getAuth();
 
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
         console.log(currentUser)
         setUser(currentUser);
-        fetchBackendData(currentUser.accessToken);
         fetchportfolio(currentUser.accessToken)
+        fetchadvices(currentUser.accessToken)
+        setLoading(false)
       } else {
         router.push('/signin'); 
       }
@@ -123,7 +123,7 @@ export default function Portfolio() {
       <div className='flex flex-row m-auto'>
         <div style={{width:"50%", height:"80vh", margin:"auto"}}>
           <div style={{justifyContent:"center", display:"flex", alignItems:"center", alignContent:"center", height:"50%", width:"100%", flexDirection:"column"}}>
-          <PortfolioTable invoices={portflio} fetchportfolio={fetchportfolio} user={user}></PortfolioTable>
+          <PortfolioTable invoices={portfolio} fetchportfolio={fetchportfolio} user={user}></PortfolioTable>
           </div>
           <div style={{justifyContent:"center", display:"flex", alignItems:"center",alignContent:"center", height:"50%", width:"100%", flexDirection:"column"}}>
             <Input className='w-[50%]' type="text" placeholder="microsoft" value={company} onChange={(e)=>setCompany(e.target.value)} />
@@ -137,8 +137,8 @@ export default function Portfolio() {
           </div>
         </div>
       <div className='border border-white rounded m-10' style={{justifyContent:"flex-start", display:"flex", alignItems:"end", height:"80vh", width:"50%", flexDirection:"column"} }>
-        {sentiments.map((comp)=>(
-          <Info key={comp.name} company={comp.name} sentiment={comp.sentiment}></Info>
+        {advices.map((comp)=>(
+          <Info key={comp.name} company={comp.name} sentiment={comp.advice}></Info>
         ))}
       </div>
       </div>

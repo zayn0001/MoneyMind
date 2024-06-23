@@ -2,6 +2,7 @@
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { Margin } from "@mui/icons-material";
 
 const provider = new GoogleAuthProvider();
 
@@ -26,7 +27,7 @@ const SignInButton = () => {
   };
 
   return (
-    <Button 
+    <Button
       variant="outline" 
       onClick={handleSignIn} 
       style={{ backgroundColor: "white", color: "black" }}

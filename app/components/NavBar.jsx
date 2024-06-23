@@ -11,6 +11,7 @@ import {
 
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu"
 import Image from "next/image"
+import SignOutButton from "./SignOutButton"
 
 export default function NavBar({user}) {
   return (
@@ -48,6 +49,7 @@ export default function NavBar({user}) {
                 height={40}
                 className="rounded-full"
               />
+              <SignOutButton></SignOutButton>
             </NavigationMenuLink>
           </NavigationMenuItem>
         </NavigationMenuList>
